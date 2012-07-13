@@ -1,0 +1,144 @@
+#include <os2.h>
+#include "hotcorn.h"
+
+ICON ID_MAIN hotcorn.ico
+
+ACCELTABLE ID_MAIN
+BEGIN
+   "w", ID_WINDOWLISTPAGE, AF_ALT
+   "o", ID_OBJECTPAGE, AF_ALT
+   "p", ID_OPTIONPAGE, AF_ALT
+   "a", ID_ABOUTPAGE,  AF_ALT
+   "s", ID_SAVEPB,     AF_ALT
+   "r", ID_RELOADPB,   AF_ALT
+   "c", ID_CLEARPB,   AF_ALT
+   VK_UP,   ID_NBFOCUS,   AF_VIRTUALKEY | AF_ALT
+   VK_DOWN, ID_SAVEFOCUS, AF_VIRTUALKEY | AF_ALT
+END
+
+HELPTABLE MAINTABLE
+BEGIN
+   HELPITEM ID_MAIN, SUBTABLE_MAIN, 1000
+END
+
+HELPSUBTABLE SUBTABLE_MAIN
+BEGIN
+   HELPSUBITEM ID_SAVEPB, 1100
+   HELPSUBITEM ID_RELOADPB, 1100
+   HELPSUBITEM ID_CLEARPB, 1100
+END
+
+DLGTEMPLATE ID_WINDOWLISTPAGE LOADONCALL MOVEABLE DISCARDABLE
+BEGIN
+    DIALOG   "Window List", ID_WINDOWLISTPAGE, 0, 0, 300, 135, FS_NOBYTEALIGN | NOT
+             FS_DLGBORDER
+    BEGIN
+        GROUPBOX "Screen", ID_DUMMY, 8, 140, 48, 40, WS_GROUP
+           AUTORADIOBUTTON "", ID_UPPERLEFT, 12, 162, 8, 10, WS_GROUP
+           AUTORADIOBUTTON "", ID_UP, 27, 162, 8, 10
+           AUTORADIOBUTTON "", ID_UPPERRIGHT, 42, 162, 8, 10
+           AUTORADIOBUTTON "", ID_LEFT, 12, 152, 8, 10
+           AUTORADIOBUTTON "", ID_RIGHT, 42, 152, 8, 10
+           AUTORADIOBUTTON "", ID_LOWERLEFT, 12, 142, 8, 10
+           AUTORADIOBUTTON "", ID_DOWN, 27, 142, 8, 10
+           AUTORADIOBUTTON "", ID_LOWERRIGHT, 42, 142, 8, 10
+
+        AUTORADIOBUTTON "Float on top", ID_FLOATTOP, 8, 128, 100, 10
+        AUTORADIOBUTTON "Float at the bottom", ID_FLOATBOTTOM, 8, 118, 100, 10
+
+        AUTOCHECKBOX    "Mouse Button ~1", ID_MB1, 8, 100, 80, 10, WS_GROUP
+        AUTOCHECKBOX    "Mouse Button ~2", ID_MB2, 8, 90, 80, 10
+        AUTOCHECKBOX    "Mouse Button ~3", ID_MB3, 8, 80, 80, 10
+        AUTOCHECKBOX    "A~lt", ID_ALT, 8, 70, 40, 10
+        AUTOCHECKBOX    "~Ctrl", ID_CTRL, 8, 60, 40, 10
+        AUTOCHECKBOX    "~Shift", ID_SHIFT, 8, 50, 40, 10
+
+        AUTOCHECKBOX    "~Bring to pointer position", ID_MOVE, 8, 30, 95, 10, WS_GROUP
+        AUTOCHECKBOX    "~Minimize on pointer leave", ID_MIN, 8, 20, 95, 10
+        AUTOCHECKBOX    "~Push back on pointer leave", ID_PUSHBACK, 8, 10, 95, 10
+
+        LTEXT           "Window List", ID_DUMMY, 156, 167, 50, 8
+        PUSHBUTTON      "R~efresh", ID_REFRESH, 106, 165, 40, 14, WS_GROUP
+        LISTBOX         ID_LISTBOX, 106, 90, 150, 75, LS_MULTIPLESEL
+
+        LTEXT           "Window List Substring Search", ID_DUMMY, 106, 77, 100, 8
+        ENTRYFIELD       "", ID_STRING_FIELD, 107, 65, 85, 8, ES_MARGIN | WS_GROUP
+        LISTBOX         ID_STRING_LIST, 106, 10, 150, 48
+        PUSHBUTTON      "~Add", ID_STRING_ADD,  196, 63, 32, 12, WS_GROUP
+        PUSHBUTTON      "~Delete", ID_STRING_DEL,  229, 63, 32, 12
+    END
+END
+
+DLGTEMPLATE ID_OBJECTPAGE LOADONCALL MOVEABLE DISCARDABLE
+BEGIN
+    DIALOG   "Objects", ID_OBJECTPAGE, 0, 0, 300, 135, FS_NOBYTEALIGN | NOT
+             FS_DLGBORDER
+    BEGIN
+        GROUPBOX "Screen", ID_DUMMY, 8, 140, 48, 40, WS_GROUP
+           AUTORADIOBUTTON "", ID_UPPERLEFT, 12, 162, 8, 10, WS_GROUP
+           AUTORADIOBUTTON "", ID_UP, 27, 162, 8, 10
+           AUTORADIOBUTTON "", ID_UPPERRIGHT, 42, 162, 8, 10
+           AUTORADIOBUTTON "", ID_LEFT, 12, 152, 8, 10
+           AUTORADIOBUTTON "", ID_RIGHT, 42, 152, 8, 10
+           AUTORADIOBUTTON "", ID_LOWERLEFT, 12, 142, 8, 10
+           AUTORADIOBUTTON "", ID_DOWN, 27, 142, 8, 10
+           AUTORADIOBUTTON "", ID_LOWERRIGHT, 42, 142, 8, 10
+
+        AUTOCHECKBOX    "Mouse Button ~1", ID_MB1, 70, 165, 80, 10, WS_GROUP
+        AUTOCHECKBOX    "Mouse Button ~2", ID_MB2, 70, 155, 80, 10
+        AUTOCHECKBOX    "Mouse Button ~3", ID_MB3, 70, 145, 80, 10
+        AUTOCHECKBOX    "A~lt", ID_ALT, 70, 135, 40, 10
+        AUTOCHECKBOX    "~Ctrl", ID_CTRL, 70, 125, 40, 10
+        AUTOCHECKBOX    "~Shift", ID_SHIFT, 70, 115, 40, 10
+
+        LTEXT           "Object List", ID_DUMMY, 8, 80, 90, 8
+        LISTBOX         ID_LISTBOX, 8, 10, 230, 70, WS_GROUP
+    END
+END
+
+MENU ID_OPOPUPMENU
+BEGIN
+    MENUITEM "~Add...    Ins",  ID_ADD
+    MENUITEM "~Delete    Del",  ID_DELETE
+END
+
+DLGTEMPLATE ID_OPTIONPAGE LOADONCALL MOVEABLE DISCARDABLE
+BEGIN
+    DIALOG  "Options", ID_OPTIONPAGE, 0, 0, 300, 135, FS_NOBYTEALIGN | NOT
+             FS_DLGBORDER
+    BEGIN
+
+        LTEXT           "Timeout Delay", ID_DUMMY, 10, 165, 66, 8
+                        PRESPARAMS PP_FOREGROUNDCOLOR, 0
+        LTEXT           "ms", ID_DUMMY, 152, 165, 20, 8
+                        PRESPARAMS PP_FOREGROUNDCOLOR, 0
+        SPINBUTTON      ID_SPIN1, 100, 165, 48, 12, SPBS_NUMERICONLY | SPBS_MASTER | SPBS_JUSTRIGHT
+        LTEXT           "Corner Margin", ID_DUMMY, 10, 152, 66, 8
+                        PRESPARAMS PP_FOREGROUNDCOLOR, 0
+        LTEXT           "pixels", ID_DUMMY, 152, 152, 20, 8
+                        PRESPARAMS PP_FOREGROUNDCOLOR, 0
+        SPINBUTTON      ID_SPINMARGIN, 100, 152, 48, 12, SPBS_NUMERICONLY | SPBS_MASTER | SPBS_JUSTRIGHT
+    END
+END
+
+DLGTEMPLATE ID_ABOUTPAGE LOADONCALL MOVEABLE DISCARDABLE
+BEGIN
+    DIALOG  "About", ID_ABOUTPAGE, 21, -16, 220, 135, FS_NOBYTEALIGN | NOT
+             FS_DLGBORDER
+
+    BEGIN
+        LTEXT           "Hot Corners", ID_DUMMY, 21, 146, 93, 17
+                        PRESPARAMS PP_FONTNAMESIZE, "18.Helv Bold"
+        LTEXT           "2.2", ID_DUMMY, 23, 139, 42, 8
+                        PRESPARAMS PP_FOREGROUNDCOLOR, 0x00FF0000
+                        PRESPARAMS PP_FONTNAMESIZE, "10.Helv Bold"
+        LTEXT           "(C) 1997-1999" , ID_DUMMY, 23, 123, 55, 8
+                        PRESPARAMS PP_FOREGROUNDCOLOR, 0
+        ENTRYFIELD      "Samuel Audet <guardia@cam.org>", ID_DUMMY, 80, 123, 135, 10,
+                        ES_READONLY | ES_MARGIN
+        LTEXT           "Please send me anything .. err MONEY!! gimme MONEY!!", ID_DUMMY, 23, 109, 250, 8
+        LTEXT           "if you are using this program.", ID_DUMMY, 23, 101, 250, 8
+        LTEXT           "Thank you for your support!", ID_DUMMY, 23, 85, 250, 8
+        CONTROL         ID_MAIN, ID_MAIN, 130, 143, 22, 16, WC_STATIC, SS_ICON | WS_VISIBLE
+    END
+END

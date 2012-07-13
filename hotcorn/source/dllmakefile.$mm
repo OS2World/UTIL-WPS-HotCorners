@@ -1,0 +1,41 @@
+:TARGET.SUFFIXES
+:TARGET.SUFFIXES
+:DEPENDENCY..LIB .c .dll .obj 
+:TARGET.all
+:DEPENDENCY.
+.\hothook.LIB
+:RULE..c.obj
+:ACTION.Compile::C++ Compiler
+:COMMAND.
+icc.exe /Ss /O /Ge- /Gi /Ol /C %s
+:RULE.{G:\hotcorn\Source}.c.obj
+:ACTION.Compile::C++ Compiler
+:COMMAND.
+icc.exe /Ss /O /Ge- /Gi /Ol /C %s
+:RULE..dll.LIB
+:ACTION.Lib::Import Lib
+:COMMAND.
+implib.exe %|dpfF.LIB %s
+:RULE.{G:\hotcorn\Source}.dll.LIB
+:ACTION.Lib::Import Lib
+:COMMAND.
+implib.exe %|dpfF.LIB %s
+:TARGET..\hothook.dll
+:DEPENDENCY.
+.\hothook.obj
+{$(LIB)}hothook.def
+:ACTION.Link::Linker
+:COMMAND.
+icc.exe @<<
+ /B" /nobase"
+ /Fehothook.dll 
+ hothook.def
+ .\hothook.obj
+<<
+:TARGET..\hothook.obj
+:DEPENDENCY.
+G:\hotcorn\Source\hothook.c
+{G:\hotcorn\Source;$(INCLUDE);}hotcorn.h
+:TARGET..\hothook.LIB
+:DEPENDENCY.
+.\hothook.dll

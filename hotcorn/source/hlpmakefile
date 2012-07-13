@@ -1,0 +1,24 @@
+# hlpmakefile
+# Created by IBM WorkFrame/2 MakeMake at 11:46:02 on 22 Aug 1999
+#
+# The actions included in this make file are:
+#  Compile::IPF Compiler
+
+.SUFFIXES:
+
+.SUFFIXES: \
+    .hlp .ipf 
+
+.ipf.hlp:
+    @echo " Compile::IPF Compiler "
+    ipfc.exe %s
+
+{G:\hotcorn\Source}.ipf.hlp:
+    @echo " Compile::IPF Compiler "
+    ipfc.exe %s
+
+all: \
+    .\hotcorn.hlp
+
+.\hotcorn.hlp: \
+    G:\hotcorn\Source\hotcorn.ipf

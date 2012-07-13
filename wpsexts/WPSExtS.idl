@@ -1,0 +1,56 @@
+#ifndef wpsext_idl
+#define wpsext_idl
+
+#include <wpfolder.idl>
+#include <wpobject.idl>
+#include <somcls.idl>
+
+interface WPSAgentSam : WPObject
+{
+   #ifdef __SOMIDL__
+   implementation
+   {
+      functionprefix = wpsagent_;
+      majorversion = 1;
+      minorversion = 2;
+
+      classinit = AgentInit;
+
+      passthru C_h  =
+      "#define INCL_WIN"
+      "#define INCL_DOS"
+      "#include <os2.h>";
+   };
+   #endif
+};
+
+interface FFolder : WPFolder
+{
+   attribute string filter;
+   attribute boolean filtered;
+
+   #ifdef __SOMIDL__
+   implementation
+   {
+      releaseorder: _get_filter, _set_filter, _get_filtered, _set_filtered;
+
+      functionprefix = ffolder_;
+      majorversion = 1;
+      minorversion = 2;
+
+      passthru C_h  =
+      "#define INCL_WIN"
+      "#define INCL_DOS"
+      "#include <os2.h>"
+      "#include \"fnmatch.h\"";
+
+     wpInitData             : override;
+     wpViewObject           : override;
+     wpPopulate             : override;
+     wpSetup                : override;
+     wpDeleteFromObjUseList : override;
+
+   };
+   #endif
+};
+#endif

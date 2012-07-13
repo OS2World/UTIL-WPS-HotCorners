@@ -1,0 +1,17 @@
+:TARGET.SUFFIXES
+:TARGET.SUFFIXES
+:DEPENDENCY..hlp .ipf 
+:TARGET.all
+:DEPENDENCY.
+.\hotcorn.hlp
+:RULE..ipf.hlp
+:ACTION.Compile::IPF Compiler
+:COMMAND.
+ipfc.exe %s
+:RULE.{G:\hotcorn\Source}.ipf.hlp
+:ACTION.Compile::IPF Compiler
+:COMMAND.
+ipfc.exe %s
+:TARGET..\hotcorn.hlp
+:DEPENDENCY.
+G:\hotcorn\Source\hotcorn.ipf

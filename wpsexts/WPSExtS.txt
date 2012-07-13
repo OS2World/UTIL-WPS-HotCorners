@@ -1,0 +1,180 @@
+WPS Extentions 1.01   (C) 1997-1998  Samuel Audet <guardia@cam.org>
+
+History
+=======
+
+1.01 March 17, 1998
+-------------------
+
+- SwitchToObject now looks for the last matching view of an object, ie.:
+  the one that is most likely to be the last opened.
+
+
+WPSAgentSam class
+=================
+
+This class will subclass WPObject and it should be replacing WPObject
+because it is the only way to have it initialized without creating a dummy
+object.  Once initialized (once and only once, when the WPS starts), it
+will start a thread waiting an input from a queue.  The following function
+that are importable from the DLL will facilitate the communication with
+this thread and its supported features.
+
+   Background open fix
+   ===================
+
+   This function will switch to the specified open views that it will find
+   to be opened.  So you can call this function right after
+   WinSetObjectData() or WinOpenObject() to fix the "background open"
+   problem.  SwitchToObject() will not open a view if none are currently
+   opened.  The C syntax is:
+
+   BOOL _System SwitchToObject(HOBJECT hobj, ULONG view,
+                                             ULONG timeout, BOOL wait)
+
+   where
+      hobj    Object permanent handle.
+      view    View of the object to switch to (see below).
+      timeout Amount of time to try to switch to the object.
+      wait    Wait or not to successful switch or timeout.
+              Should be FALSE if called from the PM thread.
+
+   If wait is TRUE, the return code indicates if the object has been
+   sucessfully switched to, else it will always report FALSE.  It will try
+   up to timeout seconds to switch to the object, after which it will
+   return FALSE.  If WPSAgentSam thread is not found, it will return FALSE.
+
+   If you don't have WPS view constant definitions, here they are:
+
+         #define OPEN_DEFAULT       0
+         #define OPEN_SETTINGS      2
+         #define OPEN_CONTENTS      1
+         #define OPEN_TREE          101
+         #define OPEN_DETAILS       102
+         #define OPEN_HELP          3
+         #define OPEN_RUNNING       4
+         #define OPEN_PROMPTDLG     5
+         #define OPEN_PALETTE       121
+         #define OPEN_USER          0x6500
+
+   I can't be sure about the exotic ones like OPEN_HELP or OPEN_USER, but I
+   have tested the first 5 ones.
+
+   Note that I don't know all the WPS bugs (err... features), so sometimes it
+   just won't switch, and since WPSAgentSam only runs on one thread, if you
+   put a timeout of 30 minutes, it won't be able to do anything else.
+
+
+   Finding Object permanent handles from WPS drop
+   ==============================================
+
+   This function will be able to convert the ulItemID of the "DRM_OBJECT"
+   mechanism from the DRAGITEM structure to an Object handle that can be
+   used with such things as WinOpenObject() and WinSetObjectData().  The C
+   syntax is:
+
+   HOBJECT _System HObjectFromID(ULONG ulItemID, BOOL shadowresolve)
+
+   where
+      ulItemID      ulItemID from DRAGITEM
+      shadowresolve Indicates if you want to have the real object handle if
+                    HObjectFromID() finds out it is a shadow.
+
+   Thanks to Rick Fishman for the tip on the identity of ulItemID with
+   "DRM_OBJECT".
+
+   It will return 0 if it cannot find the WPSAgentSam thread.
+
+
+   Query path, filename and title information from an HOBJECT
+   ==========================================================
+
+   This function will be able to find path, real filename and title
+   information from an HOBJECT.  Can be used when saving HOBJECT and you
+   need to reload them with useful information to output to the user.  The
+   C syntax is:
+
+   BOOL _System QueryPathTitle(HOBJECT hobj, BOOL shadowresolve,
+                                             BOOL truename, char path[])
+
+   where
+      hobj          Object permanent handle.
+      shadowresolve Indicates if you want to have the real object informations
+                    if QueryPathTitle() finds out it is a shadow.
+      truename      Finds the object's truname instead of its title.
+      path          An array of chars for output.
+
+   "path" will contain the fully qualified path + \ + title or the true name
+   depending on "truename" value.
+
+   ex.: x:\Desktop\OS/2 System   or with true name
+        x:\Desktop\OS!2 System
+
+        x:\Desktop\Programs\Utilites\OS/2 System Editor   or with true name
+        x:\Desktop\Programs\Utilites\
+
+   If the "path" has been successfully filled with whatever WPSAgentSam found,
+   it will return TRUE.
+
+   "path" will be a 0 length string if the object is invalid.
+
+   You can make a strrchr() for the last backslash if you only want the
+   path or the file name.
+
+   "path" should be of length 2*CCHMAXPATH for safety.
+
+
+FFolder class, the Filter Folder
+================================
+
+Once FFolder registered and WPFolder replaced, this new folder class will
+intercept FILTER= keys in the setup method of folder objects.
+
+So, for example
+
+    WinSetObjectData(hobj,"FILTER=*.C");
+
+will set the folder object title filtering to *.C.  The filter is destroyed
+when the last view of a folder is closed.  Also, if a folder is already
+opened and the filter is changed, if you try to open it with
+WinSetObjectData() or WinOpenObject() and if concurent view is disabled,
+the folder will come foreground as expected, but will also refresh its
+contents to the new filter.
+
+The object positions are not saved, and I do not plan on trying to... I
+think it will be a while until I make so darn complicated WPS extentions
+again without proper documentation (hear that IBM!??  what good is the WPS
+based on SOM if we can't get 90% of what we could with proper docs??)
+
+
+Anyway, I hope you will like them!
+
+
+Legal stuff
+===========
+
+This freeware product is used at your own risk, although it is highly
+improbable it can cause any damage.
+
+If you plan on copying me, please give me the credits, thanks.
+
+Source code is freely available, and done with VisualAge C++ 3.0.  I will
+send them to you on request unless you are planning to make money with it,
+in which case I would want to have a bit of $$$ for it.
+
+
+Contacting the author
+=====================
+
+Samuel Audet
+
+E-mail:       guardia@cam.org
+Homepage:     http://www.cam.org/~guardia
+IRC nick:     Guardian_ (be sure it's me before starting asking questions though)
+Talk Client:  Guardian@guardian.dyn.ml.org
+
+Snail Mail:
+
+   377, rue D'Argenteuil
+   Laval, Quebec
+   H7N 1P7   CANADA  

@@ -1,0 +1,49 @@
+# dllmakefile
+# Created by IBM WorkFrame/2 MakeMake at 12:08:01 on 22 Aug 1999
+#
+# The actions included in this make file are:
+#  Compile::C++ Compiler
+#  Link::Linker
+#  Lib::Import Lib
+
+.SUFFIXES:
+
+.SUFFIXES: \
+    .LIB .c .dll .obj 
+
+.c.obj:
+    @echo " Compile::C++ Compiler "
+    icc.exe /Ss /O /Ge- /Gi /Ol /C %s
+
+{G:\hotcorn\Source}.c.obj:
+    @echo " Compile::C++ Compiler "
+    icc.exe /Ss /O /Ge- /Gi /Ol /C %s
+
+.dll.LIB:
+    @echo " Lib::Import Lib "
+    implib.exe %|dpfF.LIB %s
+
+{G:\hotcorn\Source}.dll.LIB:
+    @echo " Lib::Import Lib "
+    implib.exe %|dpfF.LIB %s
+
+all: \
+    .\hothook.LIB
+
+.\hothook.dll: \
+    .\hothook.obj \
+    {$(LIB)}hothook.def
+    @echo " Link::Linker "
+    icc.exe @<<
+     /B" /nobase"
+     /Fehothook.dll 
+     hothook.def
+     .\hothook.obj
+<<
+
+.\hothook.obj: \
+    G:\hotcorn\Source\hothook.c \
+    {G:\hotcorn\Source;$(INCLUDE);}hotcorn.h
+
+.\hothook.LIB: \
+    .\hothook.dll

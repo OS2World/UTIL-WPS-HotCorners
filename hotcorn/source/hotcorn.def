@@ -1,0 +1,3 @@
+DESCRIPTION ' Hot Corners (C) 1997-1999 Samuel Audet'
+IMPORTS WPSExtS.QueryPathTitle
+        WPSExtS.HObjectFromID

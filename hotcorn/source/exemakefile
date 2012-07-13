@@ -1,0 +1,57 @@
+# exemakefile
+# Created by IBM WorkFrame/2 MakeMake at 11:43:53 on 22 Aug 1999
+#
+# The actions included in this make file are:
+#  Compile::Resource Compiler
+#  Compile::C++ Compiler
+#  Link::Linker
+#  Bind::Resource Bind
+
+.SUFFIXES:
+
+.SUFFIXES: \
+    .c .obj .rc .res 
+
+.rc.res:
+    @echo " Compile::Resource Compiler "
+    rc.exe -r %s %|fF.RES
+
+{G:\hotcorn\Source}.rc.res:
+    @echo " Compile::Resource Compiler "
+    rc.exe -r %s %|fF.RES
+
+.c.obj:
+    @echo " Compile::C++ Compiler "
+    icc.exe /Ss /O /Gi /Gu /Ol /C %s
+
+{G:\hotcorn\Source}.c.obj:
+    @echo " Compile::C++ Compiler "
+    icc.exe /Ss /O /Gi /Gu /Ol /C %s
+
+all: \
+    .\hotcorn.exe
+
+.\hotcorn.exe: \
+    .\hotcorn.obj \
+    .\hotcorn.res \
+    {$(LIB)}hothook.lib \
+    {$(LIB)}hotcorn.def
+    @echo " Link::Linker "
+    @echo " Bind::Resource Bind "
+    icc.exe @<<
+     /B" /pmtype:pm"
+     /Fehotcorn.exe 
+     hothook.lib 
+     hotcorn.def
+     .\hotcorn.obj
+<<
+    rc.exe .\hotcorn.res hotcorn.exe
+
+.\hotcorn.res: \
+    G:\hotcorn\Source\hotcorn.rc \
+    {G:\hotcorn\Source;$(INCLUDE)}hotcorn.ico \
+    {G:\hotcorn\Source;$(INCLUDE)}hotcorn.h
+
+.\hotcorn.obj: \
+    G:\hotcorn\Source\hotcorn.c \
+    {G:\hotcorn\Source;$(INCLUDE);}hotcorn.h

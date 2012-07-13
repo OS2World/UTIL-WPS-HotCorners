@@ -1,0 +1,7 @@
+LIBRARY HOTHOOK
+DESCRIPTION 'Hot Corners 2.2 Hook (C) 1997-1999 Samuel Audet <guardia@cam.org>'
+EXPORTS
+   HotCornersHookInput
+   HotCornersHookSend
+   HookInit
+   HookKill

@@ -1,0 +1,49 @@
+:TARGET.SUFFIXES
+:TARGET.SUFFIXES
+:DEPENDENCY..c .obj .rc .res 
+:TARGET.all
+:DEPENDENCY.
+.\hotcorn.exe
+:RULE..rc.res
+:ACTION.Compile::Resource Compiler
+:COMMAND.
+rc.exe -r %s %|fF.RES
+:RULE.{G:\hotcorn\Source}.rc.res
+:ACTION.Compile::Resource Compiler
+:COMMAND.
+rc.exe -r %s %|fF.RES
+:RULE..c.obj
+:ACTION.Compile::C++ Compiler
+:COMMAND.
+icc.exe /Ss /O /Gi /Gu /Ol /C %s
+:RULE.{G:\hotcorn\Source}.c.obj
+:ACTION.Compile::C++ Compiler
+:COMMAND.
+icc.exe /Ss /O /Gi /Gu /Ol /C %s
+:TARGET..\hotcorn.exe
+:DEPENDENCY.
+.\hotcorn.obj
+.\hotcorn.res
+{$(LIB)}hothook.lib
+{$(LIB)}hotcorn.def
+:ACTION.Link::Linker
+:COMMAND.
+icc.exe @<<
+ /B" /pmtype:pm"
+ /Fehotcorn.exe 
+ hothook.lib 
+ hotcorn.def
+ .\hotcorn.obj
+<<
+:ACTION.Bind::Resource Bind
+:COMMAND.
+rc.exe .\hotcorn.res hotcorn.exe
+:TARGET..\hotcorn.res
+:DEPENDENCY.
+G:\hotcorn\Source\hotcorn.rc
+{G:\hotcorn\Source;$(INCLUDE)}hotcorn.ico
+{G:\hotcorn\Source;$(INCLUDE)}hotcorn.h
+:TARGET..\hotcorn.obj
+:DEPENDENCY.
+G:\hotcorn\Source\hotcorn.c
+{G:\hotcorn\Source;$(INCLUDE);}hotcorn.h
