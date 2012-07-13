@@ -1,0 +1,4 @@
+WPS-HotCorners
+==============
+
+WPS-HotCorners
